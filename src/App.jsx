@@ -2,8 +2,10 @@ import React, { useState, useEffect } from "react";
 import Papa from "papaparse";
 import {
   AppBar, Toolbar, Typography, Button, Box, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper,
-  Select, MenuItem, FormControl, InputLabel, TextField, TableSortLabel, Container
+  Select, MenuItem, FormControl, InputLabel, TextField, TableSortLabel, Container,
+  IconButton, Drawer, List, ListItem, ListItemButton, ListItemText, Divider, useTheme, useMediaQuery
 } from "@mui/material";
+import MenuIcon from '@mui/icons-material/Menu';
 import { BrowserRouter as Router, Routes, Route, Link, useLocation } from "react-router-dom";
 
 const GOOGLE_SHEET_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQ1FUOJ-iw0rLbzpprE706bevnhSBHmmdFw2IOUQm2z0Ssk3AzQ9nD-loudBNoQj5fSrBj7JACYA6qW/pub?output=csv";
@@ -235,54 +237,84 @@ function AboutPage() {
 
 function NavBar() {
   const location = useLocation();
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
+  const [drawerOpen, setDrawerOpen] = React.useState(false);
+
+  const navLinks = [
+    { label: 'Draft', to: '/' },
+    { label: 'Weekly', to: '/weekly' },
+    { label: 'Waivers', to: '/waivers' },
+    { label: 'Trades', to: '/trades' },
+    { label: 'About', to: '/about' },
+  ];
+
   return (
     <AppBar position="fixed" color="primary" sx={{ zIndex: 1201 }}>
       <Toolbar sx={{ display: "flex", justifyContent: "space-between" }}>
         <Typography variant="h6" component={Link} to="/" sx={{ color: "inherit", textDecoration: "none", fontWeight: 700 }}>
           Fantasy Consensus
         </Typography>
-        <Box>
-          <Button
-            color="inherit"
-            component={Link}
-            to="/"
-            sx={{ fontWeight: location.pathname === "/" ? 700 : 400 }}
-          >
-            Draft
-          </Button>
-          <Button
-            color="inherit"
-            component={Link}
-            to="/weekly"
-            sx={{ fontWeight: location.pathname === "/weekly" ? 700 : 400 }}
-          >
-            Weekly
-          </Button>
-          <Button
-            color="inherit"
-            component={Link}
-            to="/waivers"
-            sx={{ fontWeight: location.pathname === "/waivers" ? 700 : 400 }}
-          >
-            Waivers
-          </Button>
-          <Button
-            color="inherit"
-            component={Link}
-            to="/trades"
-            sx={{ fontWeight: location.pathname === "/trades" ? 700 : 400 }}
-          >
-            Trades
-          </Button>
-          <Button
-            color="inherit"
-            component={Link}
-            to="/about"
-            sx={{ fontWeight: location.pathname === "/about" ? 700 : 400 }}
-          >
-            About
-          </Button>
-        </Box>
+        {isMobile ? (
+          <>
+            <IconButton
+              color="inherit"
+              edge="end"
+              onClick={() => setDrawerOpen(true)}
+              aria-label="menu"
+              sx={{ ml: 1 }}
+            >
+              <MenuIcon />
+            </IconButton>
+            <Drawer
+              anchor="right"
+              open={drawerOpen}
+              onClose={() => setDrawerOpen(false)}
+              PaperProps={{ sx: { width: 220 } }}
+            >
+              <Box sx={{ mt: 2, mb: 1, px: 2 }}>
+                <Typography variant="h6" fontWeight={700} align="center">
+                  Menu
+                </Typography>
+              </Box>
+              <Divider />
+              <List>
+                {navLinks.map(link => (
+                  <ListItem key={link.to} disablePadding>
+                    <ListItemButton
+                      component={Link}
+                      to={link.to}
+                      selected={location.pathname === link.to}
+                      onClick={() => setDrawerOpen(false)}
+                    >
+                      <ListItemText
+                        primary={link.label}
+                        primaryTypographyProps={{
+                          fontWeight: location.pathname === link.to ? 700 : 400,
+                          color: location.pathname === link.to ? theme.palette.primary.main : 'inherit',
+                        }}
+                      />
+                    </ListItemButton>
+                  </ListItem>
+                ))}
+              </List>
+            </Drawer>
+          </>
+        ) : (
+          <Box>
+            {navLinks.map(link => (
+              <Button
+                key={link.to}
+                color="inherit"
+                component={Link}
+                to={link.to}
+                sx={{ fontWeight: location.pathname === link.to ? 700 : 400 }}
+              >
+                {link.label}
+              </Button>
+            ))}
+          </Box>
+        )}
       </Toolbar>
     </AppBar>
   );
