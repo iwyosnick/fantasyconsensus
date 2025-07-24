@@ -44,8 +44,9 @@ function getComparator(order, orderBy) {
 function DraftPage() {
   // This is the former RankingsPage
   const [rankings, setRankings] = useState([]);
+  const [draftType, setDraftType] = useState("Snake");
+  const [format, setFormat] = useState("PPR");
   const [position, setPosition] = useState("All");
-  const [search, setSearch] = useState("");
   const [order, setOrder] = useState("asc");
   const [orderBy, setOrderBy] = useState("Average");
 
@@ -60,11 +61,9 @@ function DraftPage() {
     });
   }, []);
 
-  const positions = ["All", ...Array.from(new Set(rankings.map(p => p.Position).filter(Boolean)))];
-
+  // For now, position filter only affects the table
   const filtered = rankings.filter(player =>
-    (position === "All" || player.Position === position) &&
-    (player.Player || "").toLowerCase().includes(search.toLowerCase())
+    (position === "All" || player.Position === position)
   );
 
   const sorted = filtered.slice().sort(getComparator(order, orderBy));
@@ -97,6 +96,31 @@ function DraftPage() {
           mx: "auto"
         }}
       >
+        <FormControl sx={{ minWidth: 140 }}>
+          <InputLabel id="draft-type-label">Draft Type</InputLabel>
+          <Select
+            labelId="draft-type-label"
+            value={draftType}
+            label="Draft Type"
+            onChange={e => setDraftType(e.target.value)}
+          >
+            <MenuItem value="Snake">Snake</MenuItem>
+            <MenuItem value="Salary Cap">Salary Cap</MenuItem>
+          </Select>
+        </FormControl>
+        <FormControl sx={{ minWidth: 140 }}>
+          <InputLabel id="format-label">Format</InputLabel>
+          <Select
+            labelId="format-label"
+            value={format}
+            label="Format"
+            onChange={e => setFormat(e.target.value)}
+          >
+            <MenuItem value="PPR">PPR</MenuItem>
+            <MenuItem value="Half PPR">Half PPR</MenuItem>
+            <MenuItem value="Non-PPR">Non-PPR</MenuItem>
+          </Select>
+        </FormControl>
         <FormControl sx={{ minWidth: 120 }}>
           <InputLabel id="position-label">Position</InputLabel>
           <Select
@@ -105,18 +129,15 @@ function DraftPage() {
             label="Position"
             onChange={e => setPosition(e.target.value)}
           >
-            {positions.map(pos => (
-              <MenuItem key={pos} value={pos}>{pos}</MenuItem>
-            ))}
+            <MenuItem value="All">All</MenuItem>
+            <MenuItem value="QB">QB</MenuItem>
+            <MenuItem value="RB">RB</MenuItem>
+            <MenuItem value="WR">WR</MenuItem>
+            <MenuItem value="TE">TE</MenuItem>
+            <MenuItem value="K">K</MenuItem>
+            <MenuItem value="DST">DST</MenuItem>
           </Select>
         </FormControl>
-        <TextField
-          label="Search Player"
-          variant="outlined"
-          value={search}
-          onChange={e => setSearch(e.target.value)}
-          sx={{ flex: 1 }}
-        />
       </Box>
       <TableContainer
         component={Paper}
