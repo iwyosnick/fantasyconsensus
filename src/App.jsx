@@ -1,25 +1,34 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import Papa from "papaparse";
 import {
   Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Typography,
   Select, MenuItem, FormControl, InputLabel, TextField, Box, TableSortLabel
 } from "@mui/material";
 
-const mockRankings = [
-  { average: 1, name: "Christian McCaffrey", position: "RB", team: "SF", bye: 9, cbs: 1, espn: 1, fantasypros: 1, pff: 1, yahoo: 1 },
-  { average: 2.33, name: "Justin Jefferson", position: "WR", team: "MIN", bye: 13, cbs: 2, espn: 2, fantasypros: 3, pff: 2, yahoo: 2 },
-  { average: 2.67, name: "Ja'Marr Chase", position: "WR", team: "CIN", bye: 12, cbs: 3, espn: 3, fantasypros: 2, pff: 3, yahoo: 3 },
-  { average: 4, name: "Bijan Robinson", position: "RB", team: "ATL", bye: 11, cbs: 4, espn: 4, fantasypros: 4, pff: 4, yahoo: 4 },
-  { average: 5, name: "Tyreek Hill", position: "WR", team: "MIA", bye: 10, cbs: 5, espn: 5, fantasypros: 5, pff: 5, yahoo: 5 },
+const GOOGLE_SHEET_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQ1FUOJ-iw0rLbzpprE706bevnhSBHmmdFw2IOUQm2z0Ssk3AzQ9nD-loudBNoQj5fSrBj7JACYA6qW/pub?output=csv";
+
+const columns = [
+  { id: "Average", label: "Average" },
+  { id: "Player", label: "Player" },
+  { id: "Position", label: "Position" },
+  { id: "Team", label: "Team" },
+  { id: "Bye", label: "Bye" },
+  { id: "CBS", label: "CBS" },
+  { id: "ESPN", label: "ESPN" },
+  { id: "Fantasy Pros", label: "Fantasy Pros" },
+  { id: "PFF", label: "PFF" },
+  { id: "Yahoo", label: "Yahoo" },
 ];
 
-const positions = ["All", ...Array.from(new Set(mockRankings.map(p => p.position)))];
-
 function descendingComparator(a, b, orderBy) {
-  if (typeof a[orderBy] === "number" && typeof b[orderBy] === "number") {
-    return b[orderBy] - a[orderBy];
+  // Try to compare as numbers, fallback to string
+  const aVal = a[orderBy];
+  const bVal = b[orderBy];
+  if (!isNaN(parseFloat(aVal)) && !isNaN(parseFloat(bVal))) {
+    return parseFloat(bVal) - parseFloat(aVal);
   }
-  if (b[orderBy] < a[orderBy]) return -1;
-  if (b[orderBy] > a[orderBy]) return 1;
+  if (bVal < aVal) return -1;
+  if (bVal > aVal) return 1;
   return 0;
 }
 
@@ -30,14 +39,29 @@ function getComparator(order, orderBy) {
 }
 
 function App() {
+  const [rankings, setRankings] = useState([]);
   const [position, setPosition] = useState("All");
   const [search, setSearch] = useState("");
   const [order, setOrder] = useState("asc");
-  const [orderBy, setOrderBy] = useState("average");
+  const [orderBy, setOrderBy] = useState("Average");
 
-  const filtered = mockRankings.filter(player =>
-    (position === "All" || player.position === position) &&
-    player.name.toLowerCase().includes(search.toLowerCase())
+  useEffect(() => {
+    Papa.parse(GOOGLE_SHEET_CSV_URL, {
+      download: true,
+      header: true,
+      dynamicTyping: true,
+      complete: (results) => {
+        // Filter out empty rows (no Player name)
+        setRankings(results.data.filter(row => row.Player && row.Player.trim() !== ""));
+      }
+    });
+  }, []);
+
+  const positions = ["All", ...Array.from(new Set(rankings.map(p => p.Position).filter(Boolean)))];
+
+  const filtered = rankings.filter(player =>
+    (position === "All" || player.Position === position) &&
+    (player.Player || "").toLowerCase().includes(search.toLowerCase())
   );
 
   const sorted = filtered.slice().sort(getComparator(order, orderBy));
@@ -79,18 +103,7 @@ function App() {
         <Table>
           <TableHead>
             <TableRow>
-              {[
-                { id: "average", label: "Average" },
-                { id: "name", label: "Player" },
-                { id: "position", label: "Position" },
-                { id: "team", label: "Team" },
-                { id: "bye", label: "Bye" },
-                { id: "cbs", label: "CBS" },
-                { id: "espn", label: "ESPN" },
-                { id: "fantasypros", label: "Fantasy Pros" },
-                { id: "pff", label: "PFF" },
-                { id: "yahoo", label: "Yahoo" },
-              ].map(col => (
+              {columns.map(col => (
                 <TableCell
                   key={col.id}
                   sortDirection={orderBy === col.id ? order : false}
@@ -114,16 +127,11 @@ function App() {
                 hover
                 sx={{ backgroundColor: idx % 2 === 0 ? "#fff" : "#f1f5f9" }}
               >
-                <TableCell sx={{ color: "#1a202c" }}>{player.average}</TableCell>
-                <TableCell sx={{ color: "#1a202c" }}>{player.name}</TableCell>
-                <TableCell sx={{ color: "#1a202c" }}>{player.position}</TableCell>
-                <TableCell sx={{ color: "#1a202c" }}>{player.team}</TableCell>
-                <TableCell sx={{ color: "#1a202c" }}>{player.bye}</TableCell>
-                <TableCell sx={{ color: "#1a202c" }}>{player.cbs}</TableCell>
-                <TableCell sx={{ color: "#1a202c" }}>{player.espn}</TableCell>
-                <TableCell sx={{ color: "#1a202c" }}>{player.fantasypros}</TableCell>
-                <TableCell sx={{ color: "#1a202c" }}>{player.pff}</TableCell>
-                <TableCell sx={{ color: "#1a202c" }}>{player.yahoo}</TableCell>
+                {columns.map(col => (
+                  <TableCell sx={{ color: "#1a202c" }} key={col.id}>
+                    {player[col.id]}
+                  </TableCell>
+                ))}
               </TableRow>
             ))}
           </TableBody>
