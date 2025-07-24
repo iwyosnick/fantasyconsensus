@@ -73,8 +73,8 @@ function App() {
   };
 
   return (
-    <div style={{ padding: 24, background: '#f4f6fa', minHeight: '100vh' }}>
-      <Typography variant="h3" align="center" fontWeight={800} color="#1a202c" gutterBottom>
+    <div style={{ padding: 0, background: '#f4f6fa', minHeight: '100vh', width: '100vw' }}>
+      <Typography variant="h3" align="center" fontWeight={800} color="#1a202c" gutterBottom sx={{ pt: 3 }}>
         Fantasy Football Consensus Rankings
       </Typography>
       <Box sx={{ display: "flex", gap: 2, mb: 2, maxWidth: 1100, mx: "auto" }}>
@@ -108,6 +108,7 @@ function App() {
                   key={col.id}
                   sortDirection={orderBy === col.id ? order : false}
                   sx={{ color: "#1a202c", fontWeight: 700, background: "#f7f7f7" }}
+                  align={col.id === "Player" ? "left" : "center"}
                 >
                   <TableSortLabel
                     active={orderBy === col.id}
@@ -128,7 +129,7 @@ function App() {
                 sx={{ backgroundColor: idx % 2 === 0 ? "#fff" : "#f1f5f9" }}
               >
                 {columns.map(col => (
-                  <TableCell sx={{ color: "#1a202c" }} key={col.id}>
+                  <TableCell sx={{ color: "#1a202c" }} key={col.id} align={col.id === "Player" ? "left" : "center"}>
                     {player[col.id]}
                   </TableCell>
                 ))}
