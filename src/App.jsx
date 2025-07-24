@@ -73,11 +73,28 @@ function App() {
   };
 
   return (
-    <div style={{ padding: 0, background: '#f4f6fa', minHeight: '100vh', width: '100vw' }}>
-      <Typography variant="h3" align="center" fontWeight={800} color="#1a202c" gutterBottom sx={{ pt: 3 }}>
+    <div style={{ background: '#f4f6fa', minHeight: '100vh', width: '100vw' }}>
+      {/* Responsive padding for mobile */}
+      <Typography
+        variant="h3"
+        align="center"
+        fontWeight={800}
+        color="#1a202c"
+        gutterBottom
+        sx={{ pt: 3, fontSize: { xs: 22, sm: 32 } }}
+      >
         Fantasy Football Consensus Rankings
       </Typography>
-      <Box sx={{ display: "flex", gap: 2, mb: 2, maxWidth: 1100, mx: "auto" }}>
+      <Box
+        sx={{
+          display: "flex",
+          flexDirection: { xs: "column", sm: "row" },
+          gap: { xs: 1, sm: 2 },
+          mb: 2,
+          maxWidth: 1100,
+          mx: "auto"
+        }}
+      >
         <FormControl sx={{ minWidth: 120 }}>
           <InputLabel id="position-label">Position</InputLabel>
           <Select
@@ -99,15 +116,25 @@ function App() {
           sx={{ flex: 1 }}
         />
       </Box>
-      <TableContainer component={Paper} elevation={3} sx={{ maxWidth: 1100, margin: "0 auto", mt: 2 }}>
-        <Table>
+      <TableContainer
+        component={Paper}
+        elevation={3}
+        sx={{ maxWidth: 1100, margin: "0 auto", mt: 2, overflowX: "auto" }}
+      >
+        <Table sx={{ width: "100%", minWidth: 700 }}>
           <TableHead>
             <TableRow>
               {columns.map(col => (
                 <TableCell
                   key={col.id}
                   sortDirection={orderBy === col.id ? order : false}
-                  sx={{ color: "#1a202c", fontWeight: 700, background: "#f7f7f7" }}
+                  sx={{
+                    color: "#1a202c",
+                    fontWeight: 700,
+                    background: "#f7f7f7",
+                    p: { xs: 0.5, sm: 1.5 },
+                    fontSize: { xs: 12, sm: 16 }
+                  }}
                   align={col.id === "Player" ? "left" : "center"}
                 >
                   <TableSortLabel
@@ -129,7 +156,15 @@ function App() {
                 sx={{ backgroundColor: idx % 2 === 0 ? "#fff" : "#f1f5f9" }}
               >
                 {columns.map(col => (
-                  <TableCell sx={{ color: "#1a202c" }} key={col.id} align={col.id === "Player" ? "left" : "center"}>
+                  <TableCell
+                    sx={{
+                      color: "#1a202c",
+                      p: { xs: 0.5, sm: 1.5 },
+                      fontSize: { xs: 12, sm: 16 }
+                    }}
+                    key={col.id}
+                    align={col.id === "Player" ? "left" : "center"}
+                  >
                     {player[col.id]}
                   </TableCell>
                 ))}
