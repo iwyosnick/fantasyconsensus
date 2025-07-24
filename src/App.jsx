@@ -5,26 +5,18 @@ import {
 } from "@mui/material";
 
 const mockRankings = [
-  { name: "Christian McCaffrey", team: "SF", position: "RB", espn: 1, yahoo: 1, fantasypros: 1 },
-  { name: "Justin Jefferson", team: "MIN", position: "WR", espn: 2, yahoo: 2, fantasypros: 3 },
-  { name: "Ja'Marr Chase", team: "CIN", position: "WR", espn: 3, yahoo: 3, fantasypros: 2 },
-  { name: "Bijan Robinson", team: "ATL", position: "RB", espn: 4, yahoo: 4, fantasypros: 4 },
-  { name: "Tyreek Hill", team: "MIA", position: "WR", espn: 5, yahoo: 5, fantasypros: 5 },
+  { average: 1, name: "Christian McCaffrey", position: "RB", team: "SF", bye: 9, cbs: 1, espn: 1, fantasypros: 1, pff: 1, yahoo: 1 },
+  { average: 2.33, name: "Justin Jefferson", position: "WR", team: "MIN", bye: 13, cbs: 2, espn: 2, fantasypros: 3, pff: 2, yahoo: 2 },
+  { average: 2.67, name: "Ja'Marr Chase", position: "WR", team: "CIN", bye: 12, cbs: 3, espn: 3, fantasypros: 2, pff: 3, yahoo: 3 },
+  { average: 4, name: "Bijan Robinson", position: "RB", team: "ATL", bye: 11, cbs: 4, espn: 4, fantasypros: 4, pff: 4, yahoo: 4 },
+  { average: 5, name: "Tyreek Hill", position: "WR", team: "MIA", bye: 10, cbs: 5, espn: 5, fantasypros: 5, pff: 5, yahoo: 5 },
 ];
-
-function average(...nums) {
-  return (nums.reduce((a, b) => a + b, 0) / nums.length).toFixed(2);
-}
 
 const positions = ["All", ...Array.from(new Set(mockRankings.map(p => p.position)))];
 
 function descendingComparator(a, b, orderBy) {
-  if (orderBy === "average") {
-    const avgA = parseFloat(average(a.espn, a.yahoo, a.fantasypros));
-    const avgB = parseFloat(average(b.espn, b.yahoo, b.fantasypros));
-    if (avgB < avgA) return -1;
-    if (avgB > avgA) return 1;
-    return 0;
+  if (typeof a[orderBy] === "number" && typeof b[orderBy] === "number") {
+    return b[orderBy] - a[orderBy];
   }
   if (b[orderBy] < a[orderBy]) return -1;
   if (b[orderBy] > a[orderBy]) return 1;
@@ -41,7 +33,7 @@ function App() {
   const [position, setPosition] = useState("All");
   const [search, setSearch] = useState("");
   const [order, setOrder] = useState("asc");
-  const [orderBy, setOrderBy] = useState("name");
+  const [orderBy, setOrderBy] = useState("average");
 
   const filtered = mockRankings.filter(player =>
     (position === "All" || player.position === position) &&
@@ -61,7 +53,7 @@ function App() {
       <Typography variant="h3" align="center" fontWeight={800} color="#1a202c" gutterBottom>
         Fantasy Football Consensus Rankings
       </Typography>
-      <Box sx={{ display: "flex", gap: 2, mb: 2, maxWidth: 900, mx: "auto" }}>
+      <Box sx={{ display: "flex", gap: 2, mb: 2, maxWidth: 1100, mx: "auto" }}>
         <FormControl sx={{ minWidth: 120 }}>
           <InputLabel id="position-label">Position</InputLabel>
           <Select
@@ -83,18 +75,21 @@ function App() {
           sx={{ flex: 1 }}
         />
       </Box>
-      <TableContainer component={Paper} elevation={3} sx={{ maxWidth: 900, margin: "0 auto", mt: 2 }}>
+      <TableContainer component={Paper} elevation={3} sx={{ maxWidth: 1100, margin: "0 auto", mt: 2 }}>
         <Table>
           <TableHead>
             <TableRow>
               {[
+                { id: "average", label: "Average" },
                 { id: "name", label: "Player" },
-                { id: "team", label: "Team" },
                 { id: "position", label: "Position" },
+                { id: "team", label: "Team" },
+                { id: "bye", label: "Bye" },
+                { id: "cbs", label: "CBS" },
                 { id: "espn", label: "ESPN" },
+                { id: "fantasypros", label: "Fantasy Pros" },
+                { id: "pff", label: "PFF" },
                 { id: "yahoo", label: "Yahoo" },
-                { id: "fantasypros", label: "FantasyPros" },
-                { id: "average", label: "Average" }
               ].map(col => (
                 <TableCell
                   key={col.id}
@@ -119,15 +114,16 @@ function App() {
                 hover
                 sx={{ backgroundColor: idx % 2 === 0 ? "#fff" : "#f1f5f9" }}
               >
+                <TableCell sx={{ color: "#1a202c" }}>{player.average}</TableCell>
                 <TableCell sx={{ color: "#1a202c" }}>{player.name}</TableCell>
-                <TableCell sx={{ color: "#1a202c" }}>{player.team}</TableCell>
                 <TableCell sx={{ color: "#1a202c" }}>{player.position}</TableCell>
+                <TableCell sx={{ color: "#1a202c" }}>{player.team}</TableCell>
+                <TableCell sx={{ color: "#1a202c" }}>{player.bye}</TableCell>
+                <TableCell sx={{ color: "#1a202c" }}>{player.cbs}</TableCell>
                 <TableCell sx={{ color: "#1a202c" }}>{player.espn}</TableCell>
-                <TableCell sx={{ color: "#1a202c" }}>{player.yahoo}</TableCell>
                 <TableCell sx={{ color: "#1a202c" }}>{player.fantasypros}</TableCell>
-                <TableCell sx={{ color: "#1a202c" }}>
-                  {average(player.espn, player.yahoo, player.fantasypros)}
-                </TableCell>
+                <TableCell sx={{ color: "#1a202c" }}>{player.pff}</TableCell>
+                <TableCell sx={{ color: "#1a202c" }}>{player.yahoo}</TableCell>
               </TableRow>
             ))}
           </TableBody>
