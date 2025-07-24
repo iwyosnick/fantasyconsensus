@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from "react";
 import Papa from "papaparse";
 import {
-  Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Typography,
-  Select, MenuItem, FormControl, InputLabel, TextField, Box, TableSortLabel
+  AppBar, Toolbar, Typography, Button, Box, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper,
+  Select, MenuItem, FormControl, InputLabel, TextField, TableSortLabel, Container
 } from "@mui/material";
+import { BrowserRouter as Router, Routes, Route, Link, useLocation } from "react-router-dom";
 
 const GOOGLE_SHEET_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQ1FUOJ-iw0rLbzpprE706bevnhSBHmmdFw2IOUQm2z0Ssk3AzQ9nD-loudBNoQj5fSrBj7JACYA6qW/pub?output=csv";
 
@@ -21,7 +22,6 @@ const columns = [
 ];
 
 function descendingComparator(a, b, orderBy) {
-  // Try to compare as numbers, fallback to string
   const aVal = a[orderBy];
   const bVal = b[orderBy];
   if (!isNaN(parseFloat(aVal)) && !isNaN(parseFloat(bVal))) {
@@ -38,7 +38,7 @@ function getComparator(order, orderBy) {
     : (a, b) => -descendingComparator(a, b, orderBy);
 }
 
-function App() {
+function RankingsPage() {
   const [rankings, setRankings] = useState([]);
   const [position, setPosition] = useState("All");
   const [search, setSearch] = useState("");
@@ -51,7 +51,6 @@ function App() {
       header: true,
       dynamicTyping: true,
       complete: (results) => {
-        // Filter out empty rows (no Player name)
         setRankings(results.data.filter(row => row.Player && row.Player.trim() !== ""));
       }
     });
@@ -73,8 +72,7 @@ function App() {
   };
 
   return (
-    <div style={{ background: '#f4f6fa', minHeight: '100vh', width: '100vw' }}>
-      {/* Responsive padding for mobile */}
+    <Container maxWidth={false} disableGutters sx={{ background: '#f4f6fa', minHeight: '100vh', width: '100vw', pt: { xs: 7, sm: 8 } }}>
       <Typography
         variant="h3"
         align="center"
@@ -173,7 +171,63 @@ function App() {
           </TableBody>
         </Table>
       </TableContainer>
-    </div>
+    </Container>
+  );
+}
+
+function AboutPage() {
+  return (
+    <Container maxWidth="md" sx={{ pt: { xs: 10, sm: 12 } }}>
+      <Typography variant="h4" align="center" fontWeight={700} gutterBottom>
+        About
+      </Typography>
+      <Typography align="center" sx={{ fontSize: { xs: 16, sm: 20 } }}>
+        This site provides consensus fantasy football rankings, aggregating data from multiple sources. Built with React, Material UI, and Google Sheets for easy updates.
+      </Typography>
+    </Container>
+  );
+}
+
+function NavBar() {
+  const location = useLocation();
+  return (
+    <AppBar position="fixed" color="primary" sx={{ zIndex: 1201 }}>
+      <Toolbar sx={{ display: "flex", justifyContent: "space-between" }}>
+        <Typography variant="h6" component={Link} to="/" sx={{ color: "inherit", textDecoration: "none", fontWeight: 700 }}>
+          Fantasy Consensus
+        </Typography>
+        <Box>
+          <Button
+            color="inherit"
+            component={Link}
+            to="/"
+            sx={{ fontWeight: location.pathname === "/" ? 700 : 400 }}
+          >
+            Rankings
+          </Button>
+          <Button
+            color="inherit"
+            component={Link}
+            to="/about"
+            sx={{ fontWeight: location.pathname === "/about" ? 700 : 400 }}
+          >
+            About
+          </Button>
+        </Box>
+      </Toolbar>
+    </AppBar>
+  );
+}
+
+function App() {
+  return (
+    <Router>
+      <NavBar />
+      <Routes>
+        <Route path="/" element={<RankingsPage />} />
+        <Route path="/about" element={<AboutPage />} />
+      </Routes>
+    </Router>
   );
 }
 
