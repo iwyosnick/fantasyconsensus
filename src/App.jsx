@@ -120,11 +120,11 @@ function DraftPage() {
       <TableContainer
         component={Paper}
         elevation={3}
-        sx={{ maxWidth: 1100, margin: "0 auto", mt: 2, overflowX: "auto" }}
+        sx={{ maxWidth: 1100, margin: "0 auto", mt: 2, overflowX: "auto", maxHeight: '70vh', overflowY: 'auto' }}
       >
-        <Table sx={{ width: "100%", minWidth: 700 }}>
+        <Table sx={{ width: "100%", minWidth: 700 }} stickyHeader>
           <TableHead>
-            <TableRow sx={{ minHeight: { xs: 36, sm: 48 } }}>
+            <TableRow sx={{ height: { xs: 36, sm: 48 } }}>
               {columns.map(col => (
                 <TableCell
                   key={col.id}
@@ -140,6 +140,7 @@ function DraftPage() {
                     zIndex: 2,
                     verticalAlign: 'middle',
                     borderBottom: '2px solid #e0e0e0',
+                    height: { xs: 36, sm: 48 },
                   }}
                   align={col.id === "Player" ? "left" : "center"}
                 >
@@ -159,7 +160,7 @@ function DraftPage() {
               <TableRow
                 key={idx}
                 hover
-                sx={{ backgroundColor: idx % 2 === 0 ? "#fff" : "#f1f5f9", minHeight: { xs: 36, sm: 48 } }}
+                sx={{ backgroundColor: idx % 2 === 0 ? "#fff" : "#f1f5f9", height: { xs: 36, sm: 48 } }}
               >
                 {columns.map(col => (
                   <TableCell
@@ -168,6 +169,7 @@ function DraftPage() {
                       p: { xs: 0.5, sm: 1.5 },
                       fontSize: { xs: 12, sm: 16 },
                       verticalAlign: 'middle',
+                      height: { xs: 36, sm: 48 },
                     }}
                     key={col.id}
                     align={col.id === "Player" ? "left" : "center"}
