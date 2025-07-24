@@ -120,7 +120,7 @@ function DraftPage() {
       <TableContainer
         component={Paper}
         elevation={3}
-        sx={{ maxWidth: 1100, margin: "0 auto", mt: 2, overflowX: "auto", maxHeight: '70vh', overflowY: 'auto' }}
+        sx={{ maxWidth: 1100, margin: "0 auto", mt: 2, overflowX: "auto" }}
       >
         <Table sx={{ width: "100%", minWidth: 700 }}>
           <TableHead>
