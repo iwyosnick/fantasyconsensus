@@ -7,6 +7,7 @@ import {
 } from "@mui/material";
 import MenuIcon from '@mui/icons-material/Menu';
 import { BrowserRouter as Router, Routes, Route, Link, useLocation } from "react-router-dom";
+import PlayCallLogo from "./PlayCallLogo.png";
 
 const GOOGLE_SHEET_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQ1FUOJ-iw0rLbzpprE706bevnhSBHmmdFw2IOUQm2z0Ssk3AzQ9nD-loudBNoQj5fSrBj7JACYA6qW/pub?output=csv";
 
@@ -249,11 +250,28 @@ function NavBar() {
   ];
 
   return (
-    <AppBar position="fixed" color="primary" sx={{ zIndex: 1201 }}>
+    <AppBar position="fixed" sx={{ zIndex: 1201, background: '#FFFFFF', boxShadow: 'none', borderBottom: '1px solid #e0e0e0' }}>
       <Toolbar sx={{ display: "flex", justifyContent: "space-between" }}>
-        <Typography variant="h6" component={Link} to="/" sx={{ color: "inherit", textDecoration: "none", fontWeight: 700 }}>
-          Fantasy Consensus
-        </Typography>
+        <Box component={Link} to="/" sx={{ display: 'flex', alignItems: 'center', textDecoration: 'none' }}>
+          <Box
+            component="img"
+            src={PlayCallLogo}
+            alt="PlayCall Logo"
+            sx={{ height: 32, width: 32, mr: 1, filter: 'drop-shadow(0 0 0 #205900)' }}
+          />
+          <Typography
+            variant="h6"
+            sx={{
+              color: '#205900',
+              fontWeight: 700,
+              letterSpacing: 1,
+              textDecoration: 'none',
+              fontFamily: 'inherit',
+            }}
+          >
+            PlayCall
+          </Typography>
+        </Box>
         {isMobile ? (
           <>
             <IconButton
@@ -261,7 +279,7 @@ function NavBar() {
               edge="end"
               onClick={() => setDrawerOpen(true)}
               aria-label="menu"
-              sx={{ ml: 1 }}
+              sx={{ ml: 1, color: '#205900' }}
             >
               <MenuIcon />
             </IconButton>
@@ -269,10 +287,10 @@ function NavBar() {
               anchor="right"
               open={drawerOpen}
               onClose={() => setDrawerOpen(false)}
-              PaperProps={{ sx: { width: 220 } }}
+              PaperProps={{ sx: { width: 220, background: '#FFFFFF' } }}
             >
               <Box sx={{ mt: 2, mb: 1, px: 2 }}>
-                <Typography variant="h6" fontWeight={700} align="center">
+                <Typography variant="h6" fontWeight={700} align="center" sx={{ color: '#205900' }}>
                   Menu
                 </Typography>
               </Box>
@@ -285,12 +303,20 @@ function NavBar() {
                       to={link.to}
                       selected={location.pathname === link.to}
                       onClick={() => setDrawerOpen(false)}
+                      sx={{
+                        '&.Mui-selected, &.Mui-selected:hover': {
+                          background: 'rgba(32,89,0,0.08)',
+                        },
+                        '&:hover': {
+                          background: 'rgba(32,89,0,0.04)',
+                        },
+                      }}
                     >
                       <ListItemText
                         primary={link.label}
                         primaryTypographyProps={{
                           fontWeight: location.pathname === link.to ? 700 : 400,
-                          color: location.pathname === link.to ? theme.palette.primary.main : 'inherit',
+                          color: location.pathname === link.to ? '#205900' : '#205900',
                         }}
                       />
                     </ListItemButton>
@@ -307,7 +333,21 @@ function NavBar() {
                 color="inherit"
                 component={Link}
                 to={link.to}
-                sx={{ fontWeight: location.pathname === link.to ? 700 : 400 }}
+                sx={{
+                  color: '#205900',
+                  fontWeight: location.pathname === link.to ? 700 : 400,
+                  mx: 1,
+                  transition: 'color 0.2s',
+                  '&:hover': {
+                    color: '#205900',
+                    background: 'rgba(32,89,0,0.08)',
+                    fontWeight: 700,
+                  },
+                  '&.Mui-selected': {
+                    color: '#205900',
+                    fontWeight: 700,
+                  },
+                }}
               >
                 {link.label}
               </Button>
