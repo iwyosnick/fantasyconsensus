@@ -137,8 +137,9 @@ function DraftPage() {
                     fontSize: { xs: 12, sm: 16 },
                     position: 'sticky',
                     top: 0,
-                    zIndex: 1,
+                    zIndex: 2,
                     verticalAlign: 'middle',
+                    borderBottom: '2px solid #e0e0e0',
                   }}
                   align={col.id === "Player" ? "left" : "center"}
                 >
