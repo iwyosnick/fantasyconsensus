@@ -38,7 +38,8 @@ function getComparator(order, orderBy) {
     : (a, b) => -descendingComparator(a, b, orderBy);
 }
 
-function RankingsPage() {
+function DraftPage() {
+  // This is the former RankingsPage
   const [rankings, setRankings] = useState([]);
   const [position, setPosition] = useState("All");
   const [search, setSearch] = useState("");
@@ -81,7 +82,7 @@ function RankingsPage() {
         gutterBottom
         sx={{ pt: 3, fontSize: { xs: 22, sm: 32 } }}
       >
-        Fantasy Football Consensus Rankings
+        Fantasy Football Consensus Draft Rankings
       </Typography>
       <Box
         sx={{
@@ -121,7 +122,7 @@ function RankingsPage() {
       >
         <Table sx={{ width: "100%", minWidth: 700 }}>
           <TableHead>
-            <TableRow>
+            <TableRow sx={{ minHeight: { xs: 36, sm: 48 } }}>
               {columns.map(col => (
                 <TableCell
                   key={col.id}
@@ -131,7 +132,11 @@ function RankingsPage() {
                     fontWeight: 700,
                     background: "#f7f7f7",
                     p: { xs: 0.5, sm: 1.5 },
-                    fontSize: { xs: 12, sm: 16 }
+                    fontSize: { xs: 12, sm: 16 },
+                    position: 'sticky',
+                    top: 0,
+                    zIndex: 1,
+                    verticalAlign: 'middle',
                   }}
                   align={col.id === "Player" ? "left" : "center"}
                 >
@@ -151,14 +156,15 @@ function RankingsPage() {
               <TableRow
                 key={idx}
                 hover
-                sx={{ backgroundColor: idx % 2 === 0 ? "#fff" : "#f1f5f9" }}
+                sx={{ backgroundColor: idx % 2 === 0 ? "#fff" : "#f1f5f9", minHeight: { xs: 36, sm: 48 } }}
               >
                 {columns.map(col => (
                   <TableCell
                     sx={{
                       color: "#1a202c",
                       p: { xs: 0.5, sm: 1.5 },
-                      fontSize: { xs: 12, sm: 16 }
+                      fontSize: { xs: 12, sm: 16 },
+                      verticalAlign: 'middle',
                     }}
                     key={col.id}
                     align={col.id === "Player" ? "left" : "center"}
@@ -171,6 +177,45 @@ function RankingsPage() {
           </TableBody>
         </Table>
       </TableContainer>
+    </Container>
+  );
+}
+
+function WeeklyPage() {
+  return (
+    <Container maxWidth="md" sx={{ pt: { xs: 10, sm: 12 } }}>
+      <Typography variant="h4" align="center" fontWeight={700} gutterBottom>
+        Weekly Rankings
+      </Typography>
+      <Typography align="center" sx={{ fontSize: { xs: 16, sm: 20 } }}>
+        Weekly fantasy football rankings and projections will appear here.
+      </Typography>
+    </Container>
+  );
+}
+
+function WaiversPage() {
+  return (
+    <Container maxWidth="md" sx={{ pt: { xs: 10, sm: 12 } }}>
+      <Typography variant="h4" align="center" fontWeight={700} gutterBottom>
+        Waivers
+      </Typography>
+      <Typography align="center" sx={{ fontSize: { xs: 16, sm: 20 } }}>
+        Waiver wire pickups, advice, and analysis will appear here.
+      </Typography>
+    </Container>
+  );
+}
+
+function TradesPage() {
+  return (
+    <Container maxWidth="md" sx={{ pt: { xs: 10, sm: 12 } }}>
+      <Typography variant="h4" align="center" fontWeight={700} gutterBottom>
+        Trades
+      </Typography>
+      <Typography align="center" sx={{ fontSize: { xs: 16, sm: 20 } }}>
+        Trade analyzer and recommendations will appear here.
+      </Typography>
     </Container>
   );
 }
@@ -203,7 +248,31 @@ function NavBar() {
             to="/"
             sx={{ fontWeight: location.pathname === "/" ? 700 : 400 }}
           >
-            Rankings
+            Draft
+          </Button>
+          <Button
+            color="inherit"
+            component={Link}
+            to="/weekly"
+            sx={{ fontWeight: location.pathname === "/weekly" ? 700 : 400 }}
+          >
+            Weekly
+          </Button>
+          <Button
+            color="inherit"
+            component={Link}
+            to="/waivers"
+            sx={{ fontWeight: location.pathname === "/waivers" ? 700 : 400 }}
+          >
+            Waivers
+          </Button>
+          <Button
+            color="inherit"
+            component={Link}
+            to="/trades"
+            sx={{ fontWeight: location.pathname === "/trades" ? 700 : 400 }}
+          >
+            Trades
           </Button>
           <Button
             color="inherit"
@@ -224,7 +293,10 @@ function App() {
     <Router>
       <NavBar />
       <Routes>
-        <Route path="/" element={<RankingsPage />} />
+        <Route path="/" element={<DraftPage />} />
+        <Route path="/weekly" element={<WeeklyPage />} />
+        <Route path="/waivers" element={<WaiversPage />} />
+        <Route path="/trades" element={<TradesPage />} />
         <Route path="/about" element={<AboutPage />} />
       </Routes>
     </Router>
