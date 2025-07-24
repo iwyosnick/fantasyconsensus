@@ -122,7 +122,7 @@ function DraftPage() {
         elevation={3}
         sx={{ maxWidth: 1100, margin: "0 auto", mt: 2, overflowX: "auto", maxHeight: '70vh', overflowY: 'auto' }}
       >
-        <Table sx={{ width: "100%", minWidth: 700 }} stickyHeader>
+        <Table sx={{ width: "100%", minWidth: 700 }}>
           <TableHead>
             <TableRow sx={{ height: { xs: 36, sm: 48 } }}>
               {columns.map(col => (
@@ -132,12 +132,8 @@ function DraftPage() {
                   sx={{
                     color: "#1a202c",
                     fontWeight: 700,
-                    background: "#f7f7f7",
                     p: { xs: 0.5, sm: 1.5 },
                     fontSize: { xs: 12, sm: 16 },
-                    position: 'sticky',
-                    top: 0,
-                    zIndex: 2,
                     verticalAlign: 'middle',
                     borderBottom: '2px solid #e0e0e0',
                     height: { xs: 36, sm: 48 },
