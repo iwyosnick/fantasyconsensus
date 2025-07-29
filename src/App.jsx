@@ -12,16 +12,12 @@ import PlayCallLogo from "./PlayCallLogo.png";
 const GOOGLE_SHEET_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQ1FUOJ-iw0rLbzpprE706bevnhSBHmmdFw2IOUQm2z0Ssk3AzQ9nD-loudBNoQj5fSrBj7JACYA6qW/pub?output=csv";
 
 const columns = [
-  { id: "Average", label: "Average" },
+  { id: "Average", label: "Rank" },
+  { id: "Value", label: "Value" },
   { id: "Player", label: "Player" },
   { id: "Position", label: "Position" },
   { id: "Team", label: "Team" },
   { id: "Bye", label: "Bye" },
-  { id: "CBS", label: "CBS" },
-  { id: "ESPN", label: "ESPN" },
-  { id: "Fantasy Pros", label: "Fantasy Pros" },
-  { id: "PFF", label: "PFF" },
-  { id: "Yahoo", label: "Yahoo" },
 ];
 
 function descendingComparator(a, b, orderBy) {
